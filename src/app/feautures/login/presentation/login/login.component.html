@@ -1,0 +1,61 @@
+<div class=" h-[350px]">
+
+  <form #loginForm="ngForm" (ngSubmit)="onSubmitLoginForm(loginForm)"
+    class="w-full flex flex-col items-center space-y-6">
+
+    <div class=" w-full flex flex-col items-start space-y-1 ">
+
+      <div class="flex justify-between items-center w-full">
+        <label class="text-secondary-500 text-xs">نام کاربری</label>
+
+
+
+      </div>
+
+
+      <input #userNameEle #userName="ngModel" [(ngModel)]="userNameValue" required name="userName" type="text" id="userName" 
+             (input)="onChangeInput($event)"  
+         class="rounded-lg border-secondary-300 border  px-4 py-3 w-full bg-secondary-50
+                  focus:border-primary-500 transition-all duration-300 ease-in-out focus:text-secondary-800"
+                  
+             />
+      <span *ngIf="!userName.valid && userName.touched" class="text-error text-xs text-red-500"> نام کاربری الزامی است
+      </span>
+    </div>
+    <div class=" w-full flex flex-col items-start space-y-1 ">
+      <div class="flex justify-between items-center w-full">
+        <label class="text-secondary-500 text-xs">کلمه عبور </label>
+        <!-- {errors && errors.password && (
+          <span class="text-error  text-xs ">
+            {errors?.password.message}
+          </span>
+        )} -->
+      </div>
+      <input 
+            #passwordEle
+            #password="ngModel"  
+            [(ngModel)]="passWordValue"
+            (input)="onChangeInput($event)"  
+            required name="password" type="password" id="password"
+            class="rounded-lg border px-4 py-3 w-full bg-secondary-50 transition-all duration-300 ease-in-out focus:border-primary-600 focus:text-secondary-800" />
+      <!-- Error message -->
+      <span *ngIf="!password.valid && password.touched" class="text-error text-xs text-red-500"> کلمه عبور الزامی است
+      </span>
+
+    </div>
+    <button type="submit"  class="btn btn--primary w-full"  >
+      <ng-container *ngIf="!isLoading(); else loadingTpl">ورود به سامانه</ng-container>
+      <ng-template #loadingTpl>
+        <span class="flex items-center space-x-2">
+          <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+          </svg>
+          <span>در حال ورود...</span>
+        </span>
+      </ng-template>
+    </button>
+    <span >{{this.messageLogin }}</span>
+  </form>
+</div>
