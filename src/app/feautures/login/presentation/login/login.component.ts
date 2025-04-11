@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, ElementRef, OnDestroy, OnInit, resource, signal, viewChild, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, ElementRef, OnDestroy, OnInit, resource, signal, viewChild, ViewChild } from '@angular/core';
 
 import { UserLoginUseCase } from '../../domain/use-case/user-login-use-case';
 import { UserRepository } from '../../domain/repositories/user-repository';
@@ -36,11 +36,12 @@ export class LoginComponent implements OnInit,AfterViewInit,OnDestroy {
   //#region \Properties
   userNameValue : string = "admin";
   passWordValue : string = "123qwe";
-  success : boolean = false;
-  messageLogin : string = "";
+ 
+  messagePage : string = "";
 
   isLoading = signal(false);
-  
+ 
+
   @ViewChild("loginForm") loginForm?: NgForm;
   @ViewChild("userNameEle") userNameEle?:ElementRef;
   @ViewChild("passwordEle") passwordEle?:ElementRef;
@@ -86,28 +87,31 @@ export class LoginComponent implements OnInit,AfterViewInit,OnDestroy {
   //#endregion
 
   
-  constructor(public userLoginUseCase : UserLoginUseCase,private _router : Router) 
-  
+  constructor(public userLoginUseCase : UserLoginUseCase,private _router : Router)   
   {
 
     
     
-    effect(() => {
-      
+    effect( () => {
+    
       const state = this.loginResource.value();
      
       if (state?.data) {
-        {       
-          this.success = state.success;  
-          this.messageLogin = state.error;  
-          this.setSectionTypeRouter
+        {               
+          this.messagePage = state.error;  
+          if( state.success ) 
+          {
+            this.setSectionTypeRouter();
+          }
           
         }
       } else if (state?.error) {
         
       }
     });
-  
+
+        
+   
   
   }
   ngOnDestroy(): void {
@@ -126,17 +130,15 @@ export class LoginComponent implements OnInit,AfterViewInit,OnDestroy {
   
   onChangeInput(clEvent : any)
   {
-    //console.log(clEvent);
-    this.messageLogin = clEvent.target.value;
+      this.messagePage = "";
   }
 
   
   onSubmitLoginForm(clLoginForm:NgForm){
     
-     //console.log(clLoginForm.valid)
       if(this.loginResource.status() == 2)
         return;
-
+   
       if(!clLoginForm.valid)   
       {      
         
@@ -156,5 +158,9 @@ export class LoginComponent implements OnInit,AfterViewInit,OnDestroy {
  
    }
 
+   setSectionTypeRouter()
+   {
+     this._router.navigate(["/sectionTypeListPage"],{queryParams:[]});
+   }
 
 }
